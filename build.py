@@ -149,6 +149,20 @@ def footer():
 """
 
 
+# BASE_PATH lets the same build run at a sub-folder (the GitHub preview at
+# ranmyaku81.github.io/omg-website) and at the domain root (production).
+BASE_PATH = os.environ.get("BASE_PATH", "").rstrip("/")
+
+
+def rebase(html_):
+    if not BASE_PATH:
+        return html_
+    for attr in ('href="/', 'src="/', 'action="/', 'content="/'):
+        html_ = html_.replace(attr, attr[:-1] + BASE_PATH + "/")
+    html_ = html_.replace('content="0; url=/', 'content="0; url=' + BASE_PATH + "/")
+    return html_
+
+
 def render(page):
     body = header(page.get("nav")) + page["body"] + footer()
     return head(page["title"], page["description"], page["path"]) + "\n<body>\n" + body
@@ -157,7 +171,7 @@ def render(page):
 def write(path, content):
     dest = OUT / path.strip("/") / "index.html" if path != "/" else OUT / "index.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(content, encoding="utf-8")
+    dest.write_text(rebase(content), encoding="utf-8")
     return dest
 
 
@@ -187,11 +201,11 @@ def main():
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE['domain']}/sitemap.xml\n")
     urls = "".join(f"<url><loc>{SITE['domain']}{p['path']}</loc></url>" for p in pages.all_pages(ctx))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
-    (OUT / "404.html").write_text(render({
+    (OUT / "404.html").write_text(rebase(render({
         "path": "/404.html", "title": "Page not found", "nav": None,
         "description": "That page could not be found.",
         "body": '<div class="narrow page-title"><h1>Page not found</h1><p class="lede">That address doesn’t exist on our site. Try the <a href="/">home page</a> or <a href="/contact-us/">call us</a>.</p></div>',
-    }))
+    })))
     print(f"Built {count} pages into {OUT.relative_to(ROOT)}/")
 
 

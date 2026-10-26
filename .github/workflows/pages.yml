@@ -23,6 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Rebuild docs/ from src/ (keeps them in sync)
+        # BASE_PATH is for the preview at ranmyaku81.github.io/omg-website.
+        # At launch (custom domain set in Settings > Pages), delete the env line below.
+        env:
+          BASE_PATH: /omg-website
         run: python3 build.py
       - uses: actions/configure-pages@v5
         with:
