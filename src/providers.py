@@ -108,8 +108,8 @@ PROVIDERS = [
         "short": "Dr. Thomas",
         "photo": "benjamin-thomas.jpg",
         "title": "Infectious Diseases",
-        "hours": [("Tuesday", "8:00 AM – 12:00 PM"), ("Wednesday", "1:30 – 5:00 PM")],
-        "week": [("Tue", "am", ""), ("Wed", "pm", "")],
+        "hours": [("Tuesday", "8:00 AM – 12:00 PM"), ("Wednesday", "1:30 – 5:00 PM"), ("Every other Friday, Hilo", "Afternoon")],
+        "week": [("Tue", "am", ""), ("Wed", "pm", ""), ("Fri", "pm", "Hilo, alternate weeks")],
         "bio": [
             "After graduating from Mercer University School of Medicine in Macon, Georgia, Dr. Benjamin Thomas completed Internal Medicine residency training at the University of Hawaiʻi Internal Medicine Residency Program in Honolulu. He then pursued his Infectious Diseases fellowship at Washington University in St. Louis, where he also completed a Master’s degree in Clinical Investigation.",
             "Dr. Thomas serves as medical director of both Infection Prevention and Antimicrobial Stewardship at Adventist Health Castle, and as co-director of Antimicrobial Stewardship at The Queen’s Medical Center.",

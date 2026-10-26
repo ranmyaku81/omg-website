@@ -29,6 +29,15 @@ SITE = {
     "address1": "88 Piʻikoi Street",
     "address2": "Honolulu, HI 96814",
     "maps": "https://www.google.com/maps/search/?api=1&query=88+Piikoi+St,+Honolulu,+HI+96814",
+    # Hilo clinic. hilo_phone is empty until the Hilo line is set up; the site falls back to the Honolulu number.
+    "hilo_facility": "Hilo Benioff Medical Center",
+    "hilo_where": "First floor, Orthopedics office",
+    "hilo_address1": "1190 Waiānuenue Avenue",
+    "hilo_address2": "Hilo, HI 96720",
+    "hilo_maps": "https://www.google.com/maps/search/?api=1&query=Hilo+Benioff+Medical+Center,+1190+Waianuenue+Ave,+Hilo,+HI+96720",
+    "hilo_phone": "",
+    "hilo_phone_tel": "",
+    "hilo_when": "Every other Friday afternoon",
     "year": "2026",
 }
 
@@ -81,7 +90,7 @@ def header(active):
     <div class="topbar">
       <a class="brand" href="/">
         <img src="/assets/img/favicon.png" alt="" width="40" height="40">
-        <span class="brand-name">{SITE['name']}<span class="brand-sub">{SITE['tagline']} · Honolulu</span></span>
+        <span class="brand-name">{SITE['name']}<span class="brand-sub">{SITE['tagline']} · Honolulu · Hilo</span></span>
       </a>
       <div class="actions">
         <a class="btn btn-secondary" href="/payments/">Pay my bill</a>
@@ -109,6 +118,7 @@ def footer():
           <li>Phone <a href="tel:{SITE['phone_tel']}">{SITE['phone']}</a></li>
           <li>Fax {SITE['fax']}</li>
           <li><a href="/how-to-find-us/">Parking and directions</a></li>
+          <li><a href="/hilo/">Hilo clinic</a></li>
         </ul>
       </div>
       <div>

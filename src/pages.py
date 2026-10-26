@@ -9,6 +9,13 @@ DAY_NAMES = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday", "Thu": "Thur
 FORMSPREE_ID = "YOUR_FORM_ID"
 
 
+def hilo_phone(site):
+    """Hilo line if set, else the Honolulu number."""
+    if site.get("hilo_phone"):
+        return site["hilo_phone"], site["hilo_phone_tel"]
+    return site["phone"], site["phone_tel"]
+
+
 def title_block(crumb, h1, lede=""):
     c = f'<div class="crumb"><a href="/">Home</a> › {crumb}</div>' if crumb else ""
     l = f'<p class="lede">{lede}</p>' if lede else ""
@@ -47,7 +54,7 @@ def week_grid(providers):
 def contact_strip(site):
     return f"""<div class="contact-strip">
   <div class="card"><h3>Call</h3><p><a class="big-link" href="tel:{site['phone_tel']}">{site['phone']}</a></p><p class="muted small">Weekdays during office hours. Fax {site['fax']}.</p></div>
-  <div class="card"><h3>Visit</h3><p><a class="big-link" href="/how-to-find-us/">{site['address1']}</a><br>{site['address2']}</p><p class="muted small">Corner of Piʻikoi and Waimanu. Free patient parking. <a href="/how-to-find-us/">Directions</a></p></div>
+  <div class="card"><h3>Visit</h3><p><a class="big-link" href="/how-to-find-us/">{site['address1']}</a><br>{site['address2']}</p><p class="muted small">Corner of Piʻikoi and Waimanu. Free patient parking. <a href="/how-to-find-us/">Directions</a> · Also <a href="/hilo/">in Hilo</a> every other Friday.</p></div>
   <div class="card"><h3>Request an appointment</h3><p>Most new patients are referred by their primary care physician. PrEP visits need no referral.</p><p><a class="btn btn-quiet" href="/make-an-appointment/">Send a request</a></p></div>
 </div>"""
 
@@ -61,13 +68,13 @@ def home(ctx):
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <h1>Infectious disease specialists for Oʻahu</h1>
-      <p class="lede">Seven board-certified physicians caring for patients in the hospital, in our Honolulu clinic, and at home — including home IV antibiotic therapy with nurses on call around the clock.</p>
+      <h1>Infectious disease specialists for Oʻahu and East Hawaiʻi</h1>
+      <p class="lede">Seven board-certified physicians caring for patients in the hospital, in our Honolulu clinic, at our Hilo clinic, and at home — including home IV antibiotic therapy with nurses on call around the clock.</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="tel:{s['phone_tel']}">Call {s['phone']}</a>
         <a class="btn btn-secondary" href="/refer-a-patient/">Refer a patient</a>
       </div>
-      <p class="hero-note">New patients are usually referred by their primary care physician. <a href="/prep/">PrEP</a> visits need no referral.</p>
+      <p class="hero-note">New patients are usually referred by their primary care physician. <a href="/prep/">PrEP</a> visits need no referral. On the Big Island? See the <a href="/hilo/">Hilo clinic</a>.</p>
     </div>
     <figure class="hero-photo">
       <img src="/assets/img/clinic-entrance.jpg" alt="Entrance to the Oahu Medical Group clinic on Waimanu Street" width="317" height="442">
@@ -93,7 +100,7 @@ def home(ctx):
     <div class="grid-3">
       <div class="card"><h3>In the hospital</h3><p>We consult on infections at hospitals across Oʻahu — The Queen’s Medical Center, Kuakini, Straub, Pali Momi, Queen’s – West Oʻahu and Adventist Health Castle — and continue care in clinic after discharge.</p></div>
       <div class="card"><h3>In clinic</h3><p>Outpatient diagnosis and treatment of complex, persistent or recurring infections, with a plan shared back to your referring physician.</p></div>
-      <div class="card"><h3>At home</h3><p>Home IV antibiotic therapy (OPAT) coordinated by our own nurses, so you can finish treatment at home instead of an infusion center. A nurse is on call 24 hours a day.</p></div>
+      <div class="card"><h3>At home</h3><p>Home IV antibiotic therapy (OPAT) coordinated by our own nurses, so you can finish treatment at home instead of an infusion center. A nurse is on call 24 hours a day. Available on Oʻahu and in East Hawaiʻi.</p></div>
     </div>
   </div>
 </section>
@@ -144,6 +151,11 @@ def about(ctx):
       <h2>Conditions we treat</h2>
       <ul class="chips">
         <li>Osteomyelitis (bone infection)</li><li>Prosthetic joint infections</li><li>Cellulitis and skin infections</li><li>Diabetic foot infections</li><li>Bloodstream infections</li><li>Endocarditis and cardiovascular infections</li><li>Pneumonia</li><li>HIV care and PrEP</li><li>Nontuberculous mycobacteria</li><li>Fungal infections</li><li>Recurrent sinusitis</li><li>Transplant-associated infections</li><li>Travel-related infections</li>
+      </ul>
+      <h2>Where we see patients</h2>
+      <ul>
+        <li><strong>Honolulu</strong> — our main clinic at 88 Piʻikoi Street, Monday to Friday.</li>
+        <li><strong>Hilo</strong> — Dr. Thomas holds clinic at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion program covers East Hawaiʻi. <a href="/hilo/">Hilo details</a></li>
       </ul>
       <h2>Hospitals where our physicians consult</h2>
       <ul>
@@ -314,6 +326,7 @@ def for_patients(ctx):
     <a class="card" href="/payments/" style="text-decoration:none;color:inherit"><h3>Pay my bill</h3><p>Pay online using the link for your physician.</p></a>
     <a class="card" href="/frequently-asked-questions/" style="text-decoration:none;color:inherit"><h3>Common questions</h3><p>Referrals, cancellations, insurance and more.</p></a>
     <a class="card" href="/prep/" style="text-decoration:none;color:inherit"><h3>PrEP</h3><p>HIV prevention without a referral.</p></a>
+    <a class="card" href="/hilo/" style="text-decoration:none;color:inherit"><h3>Hilo clinic</h3><p>Every other Friday afternoon at Hilo Benioff Medical Center.</p></a>
   </div>
   <div style="margin-top:2.5rem">{contact_strip(s)}</div>
 </div>
@@ -491,6 +504,8 @@ def refer(ctx):
       <ul class="chips">
         <li>Bone and joint infections</li><li>Prosthetic joint infections</li><li>Diabetic foot infections</li><li>Bacteremia and endocarditis</li><li>Cellulitis that fails first-line therapy</li><li>Recurrent UTI with resistant organisms</li><li>HIV</li><li>Nontuberculous mycobacteria</li><li>Fungal infections</li><li>Fever of unknown origin</li><li>Pre-travel and post-travel evaluation</li>
       </ul>
+      <h2>East Hawaiʻi patients</h2>
+      <p>Dr. Thomas sees referred patients at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion nurse covers Hilo and the surrounding districts. Fax Hilo referrals to the same number and note “Hilo clinic” on the form. <a href="/hilo/">Hilo clinic details</a></p>
       <h2>Home IV antibiotics (OPAT)</h2>
       <p>For patients being discharged on IV antibiotics, our team arranges the home infusion, nursing visits, weekly labs and line care, and follows the patient to the end of therapy. Contact us before discharge so the first home dose is ready when the patient arrives.</p>
     </div>
@@ -513,6 +528,46 @@ def refer(ctx):
             "description": "How to refer a patient to Oahu Medical Group infectious disease specialists: fax number, referral form, and OPAT coordination.", "body": body}
 
 
+def hilo(ctx):
+    s = ctx["site"]
+    ph, tel = hilo_phone(s)
+    body = title_block("Hilo clinic", "Hilo clinic",
+                       "Infectious disease care on the Big Island: clinic visits every other Friday afternoon at Hilo Benioff Medical Center, and home IV antibiotic therapy across East Hawaiʻi.") + f"""
+<div class="wrap prose">
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h2>Clinic visits</h2>
+      <p>Dr. Benjamin Thomas sees patients in Hilo every other Friday afternoon, in the Orthopedics office on the first floor of {s['hilo_facility']}. Visits are by appointment; call to find the next clinic date.</p>
+      <ul class="facts" style="margin-top:0">
+        <li><span>Where</span><span>{s['hilo_facility']}<br>{s['hilo_where']}<br>{s['hilo_address1']}, {s['hilo_address2']} · <a href="{s['hilo_maps']}">Map</a></span></li>
+        <li><span>When</span><span>{s['hilo_when']}</span></li>
+        <li><span>Physician</span><span><a href="/our_teams/benjamin-thomas-md/">Benjamin Thomas, MD</a></span></li>
+        <li><span>Phone</span><span><a href="tel:{tel}">{ph}</a></span></li>
+        <li><span>Fax (referrals)</span><span>{s['fax']}</span></li>
+      </ul>
+      <h2>Getting an appointment</h2>
+      <p>Ask your primary care physician or hospital team to fax a referral to {s['fax']} and write “Hilo clinic” on it. We call you to schedule. Patients who were seen by Dr. Thomas in the hospital are followed up in the Hilo clinic rather than having to fly to Honolulu.</p>
+      <p>If you need to be seen sooner than the next Hilo date, we can usually see you in Honolulu or arrange a telehealth visit; ask when you call.</p>
+      <h2>Home IV antibiotics in East Hawaiʻi</h2>
+      <p>Our home-infusion program covers Hilo and the surrounding districts. A nurse visits to teach you or a family member the infusion, checks the IV line and draws weekly labs, and the practice delivers your doses. A nurse is on call 24 hours a day.</p>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Next clinic date</h3>
+        <p>Clinic falls on alternate Fridays. Call <a href="tel:{tel}">{ph}</a> for the next date and to schedule.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Honolulu clinic</h3>
+        <p>{s['address1']}, {s['address2']}<br>Monday to Friday, all seven physicians.<br><a href="/how-to-find-us/">Parking and directions</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+    return {"path": "/hilo/", "title": "Hilo clinic", "nav": "patients",
+            "description": "Oahu Medical Group infectious disease clinic in Hilo: every other Friday afternoon at Hilo Benioff Medical Center, plus home IV antibiotic therapy across East Hawaiʻi.", "body": body}
+
+
 def contact(ctx):
     s = ctx["site"]
     body = title_block("Contact", "Contact us") + f"""
@@ -528,7 +583,10 @@ def contact(ctx):
       <p class="small muted" style="margin-top:.75rem">Patients on home IV therapy: a nurse is on call 24 hours a day at the number on your infusion instructions.</p>
     </div>
     <div class="card">
-      <h3>Referring physicians</h3>
+      <h3>Hilo clinic</h3>
+      <p>{s['hilo_facility']}, {s['hilo_where'].lower()}<br>{s['hilo_address1']}, {s['hilo_address2']}</p>
+      <p class="small muted">{s['hilo_when']}, Dr. Thomas. Phone <a href="tel:{hilo_phone(s)[1]}">{hilo_phone(s)[0]}</a>. <a href="/hilo/">Details</a></p>
+      <h3 style="margin-top:1rem">Referring physicians</h3>
       <p>Fax referrals to {s['fax']}. See <a href="/refer-a-patient/">how to refer</a>.</p>
       <h3 style="margin-top:1rem">Medical records</h3>
       <p>Requests for records can be faxed to {s['fax']} with a signed authorization.</p>
@@ -575,5 +633,5 @@ def all_pages(ctx):
     out = [home(ctx), about(ctx), providers_page(ctx)]
     out += [bio(ctx, p) for p in ctx["providers"]]
     out += [services(ctx), prep(ctx), for_patients(ctx), appointment(ctx), forms(ctx), faq(ctx),
-            find_us(ctx), payments(ctx), refer(ctx), contact(ctx), privacy(ctx), terms(ctx)]
+            find_us(ctx), payments(ctx), refer(ctx), hilo(ctx), contact(ctx), privacy(ctx), terms(ctx)]
     return out
