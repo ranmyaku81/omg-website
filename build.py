@@ -17,6 +17,7 @@ OUT = ROOT / "docs"
 sys.path.insert(0, str(SRC))
 
 from providers import PROVIDERS, ORDER  # noqa: E402
+from conditions import CONDITIONS  # noqa: E402
 import pages  # noqa: E402
 
 SITE = {
@@ -43,7 +44,7 @@ SITE = {
 
 NAV = [
     ("about", "About", "/about-us/"),
-    ("providers", "Our physicians", "/our-providers/"),
+    ("providers", "Our doctors", "/our-providers/"),
     ("services", "Services", "/our-services/"),
     ("prep", "PrEP", "/prep/"),
     ("patients", "For patients", "/for-patients/"),
@@ -125,9 +126,10 @@ def footer():
         <h4>Practice</h4>
         <ul>
           <li><a href="/about-us/">About</a></li>
-          <li><a href="/our-providers/">Our physicians</a></li>
+          <li><a href="/our-providers/">Our doctors</a></li>
           <li><a href="/our-services/">Services</a></li>
           <li><a href="/prep/">PrEP</a></li>
+          <li><a href="/conditions/">Conditions we treat</a></li>
         </ul>
       </div>
       <div>
@@ -135,6 +137,7 @@ def footer():
         <ul>
           <li><a href="/make-an-appointment/">Request an appointment</a></li>
           <li><a href="/forms/">Forms</a></li>
+          <li><a href="/home-infusion/">Home IV antibiotics guide</a></li>
           <li><a href="/frequently-asked-questions/">Questions</a></li>
           <li><a href="/payments/">Pay my bill</a></li>
         </ul>
@@ -195,7 +198,7 @@ def redirect(path, to):
 def main():
     providers = {p["slug"]: p for p in PROVIDERS}
     ordered = [providers[s] for s in ORDER]
-    ctx = {"site": SITE, "providers": ordered, "e": e}
+    ctx = {"site": SITE, "providers": ordered, "conditions": CONDITIONS, "e": e}
 
     count = 0
     for page in pages.all_pages(ctx):

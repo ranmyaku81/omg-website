@@ -175,6 +175,7 @@ def about(ctx):
       <p>Most of our patients come to us from their primary care physician or from a hospital admission. We work alongside that physician: you keep your doctor, and we add the specialist piece — the diagnosis, the antibiotic plan, and the follow-up until the infection is resolved.</p>
       <p>When treatment means weeks of IV antibiotics, our own home-infusion nurses make it possible to go home rather than stay in the hospital or travel to an infusion center.</p>
       <h2>Conditions we treat</h2>
+      <p><a href="/conditions/">Read our plain-language guides</a> to the infections we see most.</p>
       <ul class="chips">
         <li>Osteomyelitis (bone infection)</li><li>Prosthetic joint infections</li><li>Cellulitis and skin infections</li><li>Diabetic foot infections</li><li>Bloodstream infections</li><li>Endocarditis and cardiovascular infections</li><li>Pneumonia</li><li>HIV care and PrEP</li><li>Nontuberculous mycobacteria</li><li>Fungal infections</li><li>Recurrent sinusitis</li><li>Transplant-associated infections</li><li>Travel-related infections</li>
       </ul>
@@ -286,6 +287,7 @@ def services(ctx):
 
   <h2>Also offered</h2>
   <ul>
+    <li><a href="/conditions/">Guides to the conditions we treat</a>, from bone infections to HIV care.</li>
     <li><a href="/prep/">HIV pre-exposure prophylaxis (PrEP)</a> — no referral needed.</li>
     <li>HIV treatment and long-term care.</li>
     <li>Antimicrobial stewardship and infection-prevention leadership at Oʻahu hospitals.</li>
@@ -346,13 +348,15 @@ def for_patients(ctx):
                        "Everything you need before, during and after a visit.") + f"""
 <div class="wrap">
   <div class="grid-3">
-    <a class="card" href="/make-an-appointment/" style="text-decoration:none;color:inherit"><h3>Request an appointment</h3><p>Send us your contact details and we will call you back.</p></a>
-    <a class="card" href="/forms/" style="text-decoration:none;color:inherit"><h3>Forms</h3><p>Print and complete the new patient form before your first visit.</p></a>
-    <a class="card" href="/how-to-find-us/" style="text-decoration:none;color:inherit"><h3>Parking and directions</h3><p>Where to park, which entrance to use, and a GPS tip.</p></a>
-    <a class="card" href="/payments/" style="text-decoration:none;color:inherit"><h3>Pay my bill</h3><p>Pay online using the link for your physician.</p></a>
-    <a class="card" href="/frequently-asked-questions/" style="text-decoration:none;color:inherit"><h3>Common questions</h3><p>Referrals, cancellations, insurance and more.</p></a>
-    <a class="card" href="/prep/" style="text-decoration:none;color:inherit"><h3>PrEP</h3><p>HIV prevention without a referral.</p></a>
-    <a class="card" href="/hilo/" style="text-decoration:none;color:inherit"><h3>Hilo clinic</h3><p>Every other Friday afternoon at Hilo Benioff Medical Center.</p></a>
+    <a class="card" href="/new-patients/"><h3>Your first visit</h3><p>What to bring, what happens, how long it takes.</p></a>
+    <a class="card" href="/make-an-appointment/"><h3>Request an appointment</h3><p>Send us your contact details and we will call you back.</p></a>
+    <a class="card" href="/forms/"><h3>Forms</h3><p>Print and complete the new patient form before your first visit.</p></a>
+    <a class="card" href="/how-to-find-us/"><h3>Parking and directions</h3><p>Where to park, which entrance to use, and a GPS tip.</p></a>
+    <a class="card" href="/payments/"><h3>Pay my bill</h3><p>Pay online using the link for your physician.</p></a>
+    <a class="card" href="/frequently-asked-questions/"><h3>Common questions</h3><p>Referrals, cancellations, insurance and more.</p></a>
+    <a class="card" href="/prep/"><h3>PrEP</h3><p>HIV prevention without a referral.</p></a>
+    <a class="card" href="/hilo/"><h3>Hilo clinic</h3><p>Every other Friday afternoon at Hilo Benioff Medical Center.</p></a>
+    <a class="card" href="/home-infusion/"><h3>Home IV antibiotics guide</h3><p>When to call, line care, doses, deliveries and labs.</p></a>
   </div>
   <div style="margin-top:2.5rem">{contact_strip(s)}</div>
 </div>
@@ -515,43 +519,129 @@ def payments(ctx):
 
 def refer(ctx):
     s = ctx["site"]
-    body = title_block("Refer a patient", "Refer a patient",
-                       "We see referred patients for outpatient consultation and manage home IV antibiotic therapy. Urgent referrals are usually seen within a few days.") + f"""
+    body = title_block("Refer a patient", "For referring clinicians",
+                       "Outpatient infectious disease consultation in Honolulu and Hilo, hospital consults across Oʻahu, and a home IV antibiotic (OPAT) program run by our own nurses.") + f"""
 <div class="wrap prose">
   <div class="grid-2" style="align-items:start">
     <div>
       <h2>How to refer</h2>
       <ol>
-        <li>Complete the <a href="/forms/Patient-Referral-Form.pdf">one-page referral form</a>, or use your own.</li>
-        <li>Fax it to <strong>{s['fax']}</strong> with the most recent progress note, relevant cultures and labs, imaging reports, and the patient’s insurance information.</li>
-        <li>We call the patient to schedule and fax or send you the consult note after the visit. For urgent problems, call {s['phone']} and ask to speak with the physician on call.</li>
+        <li>Complete the <a href="/forms/Patient-Referral-Form.pdf">one-page referral form</a>, or send your own with a reason for consultation.</li>
+        <li>Fax to <strong>{s['fax']}</strong> with the items below.</li>
+        <li>We call the patient to schedule and fax your office the consult note after the visit. For urgent problems, call {s['phone']} and ask for the physician on call.</li>
       </ol>
-      <h2>What we see most</h2>
-      <ul class="chips">
-        <li>Bone and joint infections</li><li>Prosthetic joint infections</li><li>Diabetic foot infections</li><li>Bacteremia and endocarditis</li><li>Cellulitis that fails first-line therapy</li><li>Recurrent UTI with resistant organisms</li><li>HIV</li><li>Nontuberculous mycobacteria</li><li>Fungal infections</li><li>Fever of unknown origin</li><li>Pre-travel and post-travel evaluation</li>
+
+      <h2>What to include</h2>
+      <p>The more of this we have before the visit, the less often we have to repeat testing or call your office:</p>
+      <ul class="checklist">
+        <li>Most recent progress note and problem list, with the specific question you want answered</li>
+        <li>Culture results with susceptibilities (blood, urine, wound, bone, joint fluid)</li>
+        <li>Imaging reports, and the facility where images can be retrieved</li>
+        <li>Recent labs: CBC, creatinine, CRP or ESR, liver enzymes if on antimicrobials</li>
+        <li>Antibiotics given so far, with dates and doses</li>
+        <li>Allergies and reactions, and current medication list</li>
+        <li>Insurance information and the patient’s best phone number</li>
       </ul>
-      <h2>East Hawaiʻi patients</h2>
-      <p>Dr. Thomas sees referred patients at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion nurse covers Hilo and the surrounding districts. Fax Hilo referrals to the same number and note “Hilo clinic” on the form. <a href="/hilo/">Hilo clinic details</a></p>
-      <h2>Home IV antibiotics (OPAT)</h2>
-      <p>For patients being discharged on IV antibiotics, our team arranges the home infusion, nursing visits, weekly labs and line care, and follows the patient to the end of therapy. Contact us before discharge so the first home dose is ready when the patient arrives.</p>
+
+      <h2>When a referral helps most</h2>
+      <ul class="chips">
+        <li>Bone and joint infections, including diabetic foot</li><li>Prosthetic joint or hardware infections</li><li>Bacteremia and endocarditis</li><li>Infections failing first-line therapy</li><li>Recurrent UTI with resistant organisms</li><li>Any patient who needs IV antibiotics at home</li><li>HIV: new diagnosis, care transfer, or PrEP</li><li>Nontuberculous mycobacteria</li><li>Fungal infections</li><li>Fever of unknown origin</li><li>Infection in immunocompromised patients</li><li>Pre-travel or post-travel evaluation</li>
+      </ul>
+      <p class="small muted">Not sure a formal consult is needed? Call the office; a brief physician-to-physician conversation is often enough to answer a question about antibiotic choice or duration.</p>
+
+      <h2>Discharging a patient on IV antibiotics</h2>
+      <p>For hospitalists and discharge planners: our OPAT program takes over the infusion, nursing visits, weekly labs, line care and physician follow-up through end of therapy, on Oʻahu and in East Hawaiʻi. To make the first home dose happen on the day of discharge, we need:</p>
+      <ul class="checklist">
+        <li>Infectious disease consult note with the antimicrobial, dose, frequency and planned stop date</li>
+        <li>Vascular access placed and documented (PICC or midline, tip position confirmed)</li>
+        <li>Most recent susceptibilities, creatinine and weight</li>
+        <li>Discharge address, phone, and who will help with infusions at home</li>
+        <li>Insurance information for authorization</li>
+        <li>24 hours’ notice where possible; same-day discharges can usually be covered on Oʻahu with a morning call</li>
+      </ul>
+      <p>Call {s['phone']} and ask for the infusion team, or fax the above to {s['fax']} marked “OPAT”.</p>
+
+      <h2>East Hawaiʻi</h2>
+      <p>Dr. Thomas sees referred patients at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion nurse covers Hilo and the surrounding districts. Fax Hilo referrals to the same number and write “Hilo clinic” on the form. <a href="/hilo/">Hilo clinic details</a></p>
     </div>
     <div>
       <div class="card card-ink">
         <h3>Referral fax</h3>
-        <p style="font-family:var(--font-serif);font-size:1.6rem;margin:0 0 .5rem;color:#fff">{s['fax']}</p>
+        <p style="font-family:var(--font-serif);font-size:1.7rem;margin:0 0 .5rem;color:#fff">{s['fax']}</p>
         <p>Office {s['phone']}<br>{s['address1']}, {s['address2']}</p>
-        <p><a class="btn btn-primary" href="/forms/Patient-Referral-Form.pdf">Referral form (PDF)</a></p>
+        <p><a class="btn btn-light" href="/forms/Patient-Referral-Form.pdf">Referral form (PDF)</a></p>
       </div>
       <div class="card" style="margin-top:1rem">
         <h3>Hospital consults</h3>
-        <p>For inpatients, place a consult order in your hospital’s system or page the infectious disease physician on service through the operator.</p>
+        <p>For inpatients, place a consult order in your hospital’s system or page the infectious disease physician on service through the operator. We cover Queen’s, Queen’s – West Oʻahu, Kuakini, Straub, Pali Momi and Adventist Health Castle.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>What you get back</h3>
+        <p>A consult note after each visit with the diagnosis, antimicrobial plan and stop date, monitoring labs we are following, and when we will see the patient again. We copy you on significant changes.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Turnaround</h3>
+        <p>Urgent referrals are seen within a few days; routine referrals typically within one to two weeks. Tell us on the form if the patient is being discharged or is deteriorating.</p>
       </div>
     </div>
   </div>
 </div>
 """
-    return {"path": "/refer-a-patient/", "title": "Refer a patient", "nav": "refer",
-            "description": "How to refer a patient to Oahu Medical Group infectious disease specialists: fax number, referral form, and OPAT coordination.", "body": body}
+    return {"path": "/refer-a-patient/", "title": "For referring clinicians", "nav": "refer",
+            "description": "How to refer a patient to Oahu Medical Group: fax number, what to include, OPAT discharge checklist, and what to expect back.", "body": body}
+
+
+def new_patients(ctx):
+    s = ctx["site"]
+    body = title_block('<a href="/for-patients/">For patients</a>', "Your first visit",
+                       "What to bring, what happens, and how long it takes.") + f"""
+<div class="wrap prose">
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <h2>Before you come</h2>
+      <ul class="checklist">
+        <li>Photo ID and insurance card(s)</li>
+        <li>A list of every medication and supplement you take, with doses — or bring the bottles</li>
+        <li>Any antibiotics you have taken in the past few months, and whether they helped</li>
+        <li>The <a href="/forms/New-Patient-Form.pdf">new patient form</a>, printed and completed if you can</li>
+        <li>Names of your other doctors, so we can send them our note</li>
+        <li>A family member or friend, if you would like someone to listen with you</li>
+      </ul>
+      <p>If your doctor referred you, they have usually already sent your records. If you were seen in a hospital, we can get those records ourselves.</p>
+
+      <h2>What happens at the visit</h2>
+      <p>Plan on about an hour. We go through the history of the infection in detail — when it started, what has been tried, what the cultures showed — and examine you. We review any imaging and labs, and order what is missing. You leave with a plan in plain language: what we think is going on, how we will treat it, how long it will take, and when we will see you again. Your referring doctor receives the same plan in writing.</p>
+      <p>Follow-up visits are shorter, usually 15 to 30 minutes.</p>
+
+      <h2>Insurance and payment</h2>
+      <p>We accept most major plans. Call the office with your plan name if you want to confirm before your visit. Each physician bills under their own practice, so your statement and online payment link will show the physician’s practice name. <a href="/payments/">Pay my bill</a></p>
+
+      <h2>Cancellations</h2>
+      <p>Please give us 24 hours’ notice if you need to reschedule or cancel, so the time can go to another patient.</p>
+
+      <h2>Your records and privacy</h2>
+      <p>You receive our Notice of Privacy Practices at your first visit. To request copies of your records or have them sent elsewhere, fax a signed authorization to {s['fax']} or ask at the front desk.</p>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Where</h3>
+        <p>{s['address1']}, {s['address2']}<br>Enter on Waimanu Street. Free parking in the stalls marked “OMG”.</p>
+        <p><a href="/how-to-find-us/">Parking and directions</a></p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Running late or lost?</h3>
+        <p>Call <a href="tel:{s['phone_tel']}">{s['phone']}</a>. If you are more than 15 minutes late we may need to reschedule, but call first.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Hilo patients</h3>
+        <p>Dr. Thomas sees patients at Hilo Benioff Medical Center every other Friday afternoon. <a href="/hilo/">Hilo clinic</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+    return {"path": "/new-patients/", "title": "Your first visit", "nav": "patients",
+            "description": "What to bring and what to expect at your first visit to Oahu Medical Group, infectious disease specialists in Honolulu.", "body": body}
 
 
 def hilo(ctx):
@@ -592,6 +682,156 @@ def hilo(ctx):
 """
     return {"path": "/hilo/", "title": "Hilo clinic", "nav": "patients",
             "description": "Oahu Medical Group infectious disease clinic in Hilo: every other Friday afternoon at Hilo Benioff Medical Center, plus home IV antibiotic therapy across East Hawaiʻi.", "body": body}
+
+
+def home_infusion(ctx):
+    s = ctx["site"]
+    body = title_block('<a href="/for-patients/">For patients</a>', "Home IV antibiotics: a guide for patients and families",
+                       "What happens when you finish your antibiotic treatment at home with Oahu Medical Group’s infusion nurses. Keep this page, or print it, next to your supplies.") + f"""
+<div class="wrap prose">
+  <div class="grid-2" style="align-items:start">
+    <div>
+      <div class="call-now">
+        <h3>Call the nurse on call right away if</h3>
+        <ul>
+          <li>Fever of 100.4 °F (38 °C) or higher, or shaking chills</li>
+          <li>Redness, swelling, pain, warmth or pus where the IV line enters the skin</li>
+          <li>Swelling or pain in the arm, shoulder or neck on the side of the line</li>
+          <li>The line is leaking, cracked, has pulled out partly, or won’t flush</li>
+          <li>Rash, itching, hives, or new diarrhea that is watery or frequent</li>
+          <li>You missed a dose, or a dose was damaged, late or not delivered</li>
+        </ul>
+        <p><strong>Call 911</strong> for trouble breathing, swelling of the face or throat, chest pain, or if the line comes all the way out and bleeding won’t stop with firm pressure.</p>
+        <p>The on-call number is on your infusion instructions. A nurse answers 24 hours a day, 7 days a week.</p>
+      </div>
+
+      <h2>How the program works</h2>
+      <p>Your infectious disease physician has decided you need antibiotics that must be given into a vein, for a set number of weeks. Instead of staying in the hospital or going to an infusion center every day, you receive the doses at home. Oahu Medical Group prepares the doses, delivers them to you, and provides the nurses who teach you, visit you, and watch your progress. Your physician sees you in clinic during treatment and decides when to stop.</p>
+
+      <h2>Your IV line</h2>
+      <p>Most patients have a PICC line — a thin, soft tube placed in the upper arm that reaches a large vein near the heart — or a midline, a shorter version. It stays in for the whole course and is removed at the end. The line lets you receive medicine without repeated needle sticks, and blood for your weekly labs can usually be drawn from it.</p>
+      <ul>
+        <li>Keep the dressing clean, dry and sealed. Your nurse changes it weekly, or sooner if it gets wet or loose.</li>
+        <li>Cover the arm with a waterproof sleeve or plastic wrap taped above and below for showers. No baths, swimming or ocean until the line is out.</li>
+        <li>Don’t lift more than about 10 pounds with that arm, and avoid blood pressure cuffs and needle sticks on it.</li>
+        <li>Flush the line as your nurse taught you, before and after each dose, to keep it open.</li>
+      </ul>
+
+      <h2>Giving the dose</h2>
+      <p>At your first visit a nurse walks you — and a family member if possible — through every step, and watches you do it until you are comfortable. The method depends on the antibiotic: some run in from a small pump or ball-shaped infuser over 30 minutes to a few hours, some are pushed slowly by syringe, and some run continuously from a pump you carry. Your written instructions list your medicine, the dose, the exact times, and how long each infusion takes. <span class="muted">[Nurses: insert practice-specific steps here, or link the teaching sheet for each delivery method.]</span></p>
+      <ul>
+        <li>Wash your hands and set up on a clean surface before every dose.</li>
+        <li>Check the label: your name, the medicine, and the date. Let a refrigerated dose come to room temperature as instructed.</li>
+        <li>Give doses on time. Timing matters more for some antibiotics than others; your instructions say how late is too late and what to do if you miss one.</li>
+        <li>Record each dose on your log sheet. Bring it to clinic.</li>
+      </ul>
+
+      <h2>Deliveries and supplies</h2>
+      <p>Doses are delivered to your home on a schedule — usually weekly, sometimes more often for medicines that don’t keep long. Keep them in the refrigerator unless told otherwise, away from the freezer section, and don’t use a dose that looks cloudy, discolored or has particles in it. If a delivery hasn’t arrived when expected, call the office before you run out. Used needles and syringes go in the sharps container we give you; we take the full container back. <span class="muted">[Confirm delivery days and the Hilo delivery arrangement.]</span></p>
+
+      <h2>Nurse visits and labs</h2>
+      <p>A nurse visits at least weekly to change your dressing, check the line and draw blood. The blood tests look for side effects of the antibiotic on your kidneys, liver and blood counts, and for some medicines measure the drug level. Your physician reviews every result; we call you if a dose needs to change. Please keep your phone on and let us know if you will be away from home on a visit day.</p>
+
+      <h2>Side effects</h2>
+      <p>Each antibiotic has its own common side effects and your instructions describe yours. In general, mild nausea, a metallic taste, or soft stools are common and manageable; tell the nurse so we can help. Watery or frequent diarrhea, a rash, ringing in the ears, dizziness, or tingling in the hands and feet are reasons to call the same day. Never stop the antibiotic on your own — call us first.</p>
+
+      <h2>Daily life</h2>
+      <ul>
+        <li>You can work, drive and walk as your energy allows; many people return to normal activity within the first week.</li>
+        <li>Alcohol: avoid it with certain antibiotics; your instructions will say. Ask before taking any new medicine or supplement, including over-the-counter ones.</li>
+        <li>Travel between islands is possible with planning; tell us at least a week ahead so doses and nursing can be arranged.</li>
+        <li>Keep every clinic appointment. Your physician decides the stop date based on how you are doing, the labs, and sometimes repeat imaging.</li>
+      </ul>
+
+      <h2>Finishing treatment</h2>
+      <p>When the course is complete, a nurse removes the line — it takes a few minutes and is not painful — and you keep a small dressing on for a day. Your physician sees you in clinic a few weeks later to confirm the infection has stayed away. Call us after treatment ends if any of the original symptoms return.</p>
+
+      <p class="small muted">Draft for review by the Oahu Medical Group infusion nursing team before publication. Replace bracketed notes with practice-specific instructions. Last edited October 2026.</p>
+    </div>
+    <div>
+      <div class="card card-ink">
+        <h3>Nurse on call</h3>
+        <p style="font-family:var(--font-serif);font-size:1.4rem;margin:0 0 .5rem;color:#fff">See your infusion instructions</p>
+        <p>24 hours a day, 7 days a week.<br>Office {s['phone']}, weekdays.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Keep handy</h3>
+        <ul class="checklist" style="margin:0">
+          <li>Your written infusion instructions</li>
+          <li>Dose log sheet</li>
+          <li>Thermometer</li>
+          <li>Waterproof arm cover</li>
+          <li>Sharps container</li>
+          <li>Next clinic appointment date</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>East Hawaiʻi patients</h3>
+        <p>Our home-infusion nurse covers Hilo and the surrounding districts, and Dr. Thomas follows you at the <a href="/hilo/">Hilo clinic</a>.</p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Print this guide</h3>
+        <p>Use your browser’s Print command; the page is laid out to print cleanly on letter paper.</p>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+    return {"path": "/home-infusion/", "title": "Home IV antibiotics guide", "nav": "patients",
+            "description": "A guide for Oahu Medical Group patients receiving IV antibiotics at home: when to call, caring for your PICC line, giving doses, deliveries, labs and side effects.", "body": body}
+
+
+def conditions_index(ctx):
+    s = ctx["site"]
+    cards = "".join(f'<a class="card" href="/conditions/{c["slug"]}/"><h3>{c["name"]}</h3><p>{c["short"]}</p></a>' for c in ctx["conditions"])
+    body = title_block("Conditions", "Conditions we treat",
+                       "Plain-language guides to the infections we see most, written by our physicians for patients and families. They describe what to expect in general; your own plan may differ.") + f"""
+<div class="wrap">
+  <div class="grid-2">{cards}</div>
+  <p class="muted" style="margin-top:2rem">We also treat pneumonia, urinary infections with resistant organisms, infections in transplant and chemotherapy patients, sinus infections that keep returning, travel-related illness, and fevers without an obvious cause. If your condition isn’t listed, ask your doctor to call us.</p>
+</div>
+"""
+    return {"path": "/conditions/", "title": "Conditions we treat", "nav": "services",
+            "description": "Plain-language guides from Oahu Medical Group to osteomyelitis, prosthetic joint infection, diabetic foot infection, endocarditis, cellulitis, NTM, fungal infections and HIV care.", "body": body}
+
+
+def condition_page(ctx, c):
+    s = ctx["site"]
+    secs = "".join(f"<h2>{h}</h2>{html_}" for h, html_ in c["sections"])
+    calls = "".join(f"<li>{x}</li>" for x in c["calls"])
+    body = title_block('<a href="/conditions/">Conditions</a>', c["name"], c["short"]) + f"""
+<div class="wrap prose">
+  <div class="grid-2" style="align-items:start">
+    <div>
+      {secs}
+      <div class="call-now">
+        <h3>Call us if</h3>
+        <ul>{calls}</ul>
+        <p style="margin-top:1rem"><strong>{s['phone']}</strong> during office hours. Patients on home IV therapy can reach a nurse any time at the number on their infusion instructions. In an emergency, call 911.</p>
+      </div>
+      <p class="small muted">This page is general information from Oahu Medical Group and is not a substitute for advice from your own physician. Reviewed by our physicians; last updated October 2026.</p>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Seeing us about this</h3>
+        <p>Most patients are referred by their primary care physician or hospital team. Ask them to fax a referral to {s['fax']}.</p>
+        <p><a href="/new-patients/">What to expect at a first visit</a></p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Treatment at home</h3>
+        <p>Many of these infections are treated with IV antibiotics at home through our infusion program, with nurses on call around the clock.</p>
+        <p><a href="/home-infusion/">Home infusion guide</a></p>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <h3>Other conditions</h3>
+        <ul style="padding-left:1.1rem;margin:0">{''.join(f'<li><a href="/conditions/{o["slug"]}/">{o["name"]}</a></li>' for o in ctx["conditions"] if o["slug"] != c["slug"])}</ul>
+      </div>
+    </div>
+  </div>
+</div>
+"""
+    return {"path": f"/conditions/{c['slug']}/", "title": c["name"], "nav": "services",
+            "description": f"{c['name']}: what it is, how it is diagnosed and treated, and when to call. From the infectious disease physicians of Oahu Medical Group, Honolulu.", "body": body}
 
 
 def contact(ctx):
@@ -659,5 +899,7 @@ def all_pages(ctx):
     out = [home(ctx), about(ctx), providers_page(ctx)]
     out += [bio(ctx, p) for p in ctx["providers"]]
     out += [services(ctx), prep(ctx), for_patients(ctx), appointment(ctx), forms(ctx), faq(ctx),
-            find_us(ctx), payments(ctx), refer(ctx), hilo(ctx), contact(ctx), privacy(ctx), terms(ctx)]
+            find_us(ctx), payments(ctx), refer(ctx), hilo(ctx), new_patients(ctx), home_infusion(ctx), conditions_index(ctx)]
+    out += [condition_page(ctx, c) for c in ctx["conditions"]]
+    out += [contact(ctx), privacy(ctx), terms(ctx)]
     return out
