@@ -3,6 +3,29 @@
 # Run `python3 build.py` after editing.
 
 DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+
+ICON = {
+    "pin": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    "cal": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>',
+    "card": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>',
+    "doc": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M9 14h6M9 17h4"/></svg>',
+    "hospital": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M12 9v4M10 11h4"/></svg>',
+    "person": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>',
+    "home": '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h14V10M10 20v-5h4v5"/></svg>',
+}
+
+
+def days_summary(p):
+    """Compact clinic-days line for provider cards, e.g. 'Tue am · Wed pm · alt Fri pm, Hilo'."""
+    out = []
+    for day, half, note in p.get("week", []):
+        s = f"{day} {half}"
+        if "alternate" in note:
+            s = "alt " + s
+        if "Hilo" in note:
+            s += ", Hilo"
+        out.append(s)
+    return " · ".join(out)
 DAY_NAMES = {"Mon": "Monday", "Tue": "Tuesday", "Wed": "Wednesday", "Thu": "Thursday", "Fri": "Friday"}
 
 # Form endpoint. Create a free form at https://formspree.io, then paste its ID here (looks like "xabcdefg").
@@ -24,11 +47,12 @@ def title_block(crumb, h1, lede=""):
 
 def provider_card(p):
     if p.get("photo"):
-        img = f'<img src="/assets/img/{p["photo"]}" alt="{p["name"]}" width="532" height="747" loading="lazy">'
+        img = f'<img src="/assets/img/{p["photo"]}" alt="" width="96" height="96" loading="lazy">'
     else:
         initials = "".join(w[0] for w in p["name"].replace(",", "").split()[:2])
         img = f'<div class="placeholder" aria-hidden="true">{initials}</div>'
-    return f'<li class="provider"><a href="/our_teams/{p["slug"]}/">{img}<h3>{p["name"]}</h3><p>{p["title"]}</p></a></li>'
+    days = days_summary(p) or "Call for clinic days"
+    return f'<li class="provider"><a href="/our_teams/{p["slug"]}/">{img}<span><h3>{p["name"]}</h3><p>{days}</p></span></a></li>'
 
 
 def week_grid(providers):
@@ -68,22 +92,24 @@ def home(ctx):
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <h1>Infectious disease specialists for Oʻahu and East Hawaiʻi</h1>
-      <p class="lede">Seven board-certified physicians caring for patients in the hospital, in our Honolulu clinic, at our Hilo clinic, and at home — including home IV antibiotic therapy with nurses on call around the clock.</p>
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="tel:{s['phone_tel']}">Call {s['phone']}</a>
-        <a class="btn btn-secondary" href="/refer-a-patient/">Refer a patient</a>
-      </div>
-      <p class="hero-note">New patients are usually referred by their primary care physician. <a href="/prep/">PrEP</a> visits need no referral. On the Big Island? See the <a href="/hilo/">Hilo clinic</a>.</p>
+      <h1>Specialists in treating infections — in hospital, in clinic, and at home.</h1>
+      <p class="lede">Seven doctors in Honolulu and Hilo. Most patients come to us from their own doctor; call us if you have questions about a referral.</p>
+      <ul class="wayfind">
+        <li><a href="/how-to-find-us/">{ICON['pin']}Find our office</a></li>
+        <li><a href="/our-providers/">{ICON['cal']}Clinic days</a></li>
+        <li><a href="/payments/">{ICON['card']}Pay my bill</a></li>
+        <li><a href="/refer-a-patient/">{ICON['doc']}Refer a patient</a></li>
+      </ul>
+      <p class="hero-note"><a href="/prep/">PrEP</a> visits need no referral. On the Big Island? See the <a href="/hilo/">Hilo clinic</a>.</p>
     </div>
     <figure class="hero-photo">
       <img src="/assets/img/clinic-entrance.jpg" alt="Entrance to the Oahu Medical Group clinic on Waimanu Street" width="317" height="442">
-      <figcaption>Our clinic entrance is on Waimanu Street, at 88 Piʻikoi. <a href="/how-to-find-us/">Parking and directions</a></figcaption>
+      <figcaption><strong>88 Piʻikoi Street, Honolulu.</strong> Enter on Waimanu Street. Free parking in the stalls marked “OMG”. <a href="/how-to-find-us/">Directions</a></figcaption>
     </figure>
   </div>
 </section>
 
-<section class="section-paper">
+<section>
   <div class="wrap">
     <div class="section-head">
       <h2>Who is in clinic this week</h2>
@@ -94,20 +120,20 @@ def home(ctx):
   </div>
 </section>
 
-<section>
+<section class="section-sea">
   <div class="wrap">
-    <div class="section-head"><h2>How we care for patients</h2><p><a href="/our-services/">All services</a></p></div>
+    <div class="section-head"><h2>How we can help</h2><p><a href="/our-services/">All services</a></p></div>
     <div class="grid-3">
-      <div class="card"><h3>In the hospital</h3><p>We consult on infections at hospitals across Oʻahu — The Queen’s Medical Center, Kuakini, Straub, Pali Momi, Queen’s – West Oʻahu and Adventist Health Castle — and continue care in clinic after discharge.</p></div>
-      <div class="card"><h3>In clinic</h3><p>Outpatient diagnosis and treatment of complex, persistent or recurring infections, with a plan shared back to your referring physician.</p></div>
-      <div class="card"><h3>At home</h3><p>Home IV antibiotic therapy (OPAT) coordinated by our own nurses, so you can finish treatment at home instead of an infusion center. A nurse is on call 24 hours a day. Available on Oʻahu and in East Hawaiʻi.</p></div>
+      <div class="tile tile-sand">{ICON['hospital']}<h3>If you’re in the hospital</h3><p>Your hospital doctor may ask us to see you. We visit daily, and then see you in our clinic after you go home.</p></div>
+      <div class="tile tile-sky">{ICON['person']}<h3>If your doctor referred you</h3><p>We call you to set up a visit in Honolulu, or in Hilo every other Friday. Bring your medication list and insurance card.</p></div>
+      <div class="tile tile-sea" style="background:#fff">{ICON['home']}<h3>If you need IV antibiotics at home</h3><p>Our nurses teach you the infusion, visit for line care and labs, and are on call day and night. <a href="/home-infusion/">Home infusion guide</a></p></div>
     </div>
   </div>
 </section>
 
-<section class="section-paper">
+<section>
   <div class="wrap">
-    <div class="section-head"><h2>Our physicians</h2><p><a href="/our-providers/">Bios and clinic hours</a></p></div>
+    <div class="section-head"><h2>Our doctors</h2><p><a href="/our-providers/">Bios and the full clinic schedule</a></p></div>
     <ul class="providers">{cards}</ul>
   </div>
 </section>
@@ -122,7 +148,7 @@ def home(ctx):
     <div>
       <h2>Already a patient?</h2>
       <p>Pay a bill, download new-patient paperwork, or find answers to common questions.</p>
-      <p><a class="btn btn-secondary" style="border-color:#fff;color:#fff" href="/for-patients/">Patient information</a></p>
+      <p><a class="btn btn-light" href="/for-patients/">Patient information</a></p>
     </div>
   </div>
 </section>
@@ -185,12 +211,12 @@ def about(ctx):
 def providers_page(ctx):
     s, P = ctx["site"], ctx["providers"]
     cards = "".join(provider_card(p) for p in P)
-    body = title_block("Our physicians", "Our physicians",
-                       "All seven are board-certified in Infectious Diseases and see patients at the hospitals and in our Honolulu clinic.") + f"""
+    body = title_block("Our doctors", "Our doctors",
+                       "All seven are board-certified in Infectious Diseases and see patients at the hospitals and in our Honolulu clinic; Dr. Thomas also holds clinic in Hilo.") + f"""
 <div class="wrap">
   <ul class="providers">{cards}</ul>
 </div>
-<section class="section-paper" style="margin-top:3rem">
+<section class="section-sea" style="margin-top:3rem">
   <div class="wrap">
     <h2>Clinic schedule</h2>
     {week_grid(P)}
