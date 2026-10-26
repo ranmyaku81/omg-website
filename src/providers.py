@@ -113,8 +113,9 @@ PROVIDERS = [
         "bio": [
             "After graduating from Mercer University School of Medicine in Macon, Georgia, Dr. Benjamin Thomas completed Internal Medicine residency training at the University of Hawaiʻi Internal Medicine Residency Program in Honolulu. He then pursued his Infectious Diseases fellowship at Washington University in St. Louis, where he also completed a Master’s degree in Clinical Investigation.",
             "Dr. Thomas serves as medical director of both Infection Prevention and Antimicrobial Stewardship at Adventist Health Castle, and as co-director of Antimicrobial Stewardship at The Queen’s Medical Center.",
+            "He also cares for patients on the Big Island, consulting on inpatients at Hilo Benioff Medical Center and holding clinic there every other Friday afternoon.",
         ],
-        "facts": [("Medical school", "Mercer University School of Medicine"), ("Residency", "Internal Medicine, University of Hawaiʻi"), ("Fellowship", "Infectious Diseases, Washington University in St. Louis (MS, Clinical Investigation)"), ("Hospitals", "Adventist Health Castle, The Queen’s Medical Center")],
+        "facts": [("Medical school", "Mercer University School of Medicine"), ("Residency", "Internal Medicine, University of Hawaiʻi"), ("Fellowship", "Infectious Diseases, Washington University in St. Louis (MS, Clinical Investigation)"), ("Hospitals", "Adventist Health Castle, The Queen’s Medical Center, Hilo Benioff Medical Center")],
         "pay": "https://alohainfectious.securepayments.cardpointe.com/pay",
         "pay_entity": "Aloha Infectious Diseases LLC",
     },

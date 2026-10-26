@@ -182,7 +182,7 @@ def about(ctx):
       <h2>Where we see patients</h2>
       <ul>
         <li><strong>Honolulu</strong> — our main clinic at 88 Piʻikoi Street, Monday to Friday.</li>
-        <li><strong>Hilo</strong> — Dr. Thomas holds clinic at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion program covers East Hawaiʻi. <a href="/hilo/">Hilo details</a></li>
+        <li><strong>Hilo</strong> — Dr. Thomas consults on inpatients at Hilo Benioff Medical Center and holds clinic there every other Friday afternoon, and our home-infusion program covers East Hawaiʻi. <a href="/hilo/">Hilo details</a></li>
       </ul>
       <h2>Hospitals where our physicians consult</h2>
       <ul>
@@ -191,6 +191,7 @@ def about(ctx):
         <li>Straub Medical Center</li>
         <li>Pali Momi Medical Center</li>
         <li>Adventist Health Castle</li>
+        <li>Hilo Benioff Medical Center, on the Big Island (Dr. Thomas)</li>
       </ul>
     </div>
     <div>
@@ -520,7 +521,7 @@ def payments(ctx):
 def refer(ctx):
     s = ctx["site"]
     body = title_block("Refer a patient", "For referring clinicians",
-                       "Outpatient infectious disease consultation in Honolulu and Hilo, hospital consults across Oʻahu, and a home IV antibiotic (OPAT) program run by our own nurses.") + f"""
+                       "Outpatient infectious disease consultation in Honolulu and Hilo, hospital consults across Oʻahu and at Hilo Benioff Medical Center, and a home IV antibiotic (OPAT) program run by our own nurses.") + f"""
 <div class="wrap prose">
   <div class="grid-2" style="align-items:start">
     <div>
@@ -562,7 +563,7 @@ def refer(ctx):
       <p>Call {s['phone']} and ask for the infusion team, or fax the above to {s['fax']} marked “OPAT”.</p>
 
       <h2>East Hawaiʻi</h2>
-      <p>Dr. Thomas sees referred patients at Hilo Benioff Medical Center every other Friday afternoon, and our home-infusion nurse covers Hilo and the surrounding districts. Fax Hilo referrals to the same number and write “Hilo clinic” on the form. <a href="/hilo/">Hilo clinic details</a></p>
+      <p>Dr. Thomas consults on inpatients at Hilo Benioff Medical Center and sees referred outpatients there every other Friday afternoon; our home-infusion nurse covers Hilo and the surrounding districts. Fax Hilo referrals to the same number and write “Hilo clinic” on the form. <a href="/hilo/">Hilo clinic details</a></p>
     </div>
     <div>
       <div class="card card-ink">
@@ -573,7 +574,7 @@ def refer(ctx):
       </div>
       <div class="card" style="margin-top:1rem">
         <h3>Hospital consults</h3>
-        <p>For inpatients, place a consult order in your hospital’s system or page the infectious disease physician on service through the operator. We cover Queen’s, Queen’s – West Oʻahu, Kuakini, Straub, Pali Momi and Adventist Health Castle.</p>
+        <p>For inpatients, place a consult order in your hospital’s system or page the infectious disease physician on service through the operator. We cover Queen’s, Queen’s – West Oʻahu, Kuakini, Straub, Pali Momi and Adventist Health Castle on Oʻahu, and Dr. Thomas consults at Hilo Benioff Medical Center.</p>
       </div>
       <div class="card" style="margin-top:1rem">
         <h3>What you get back</h3>
@@ -648,7 +649,7 @@ def hilo(ctx):
     s = ctx["site"]
     ph, tel = hilo_phone(s)
     body = title_block("Hilo clinic", "Hilo clinic",
-                       "Infectious disease care on the Big Island: clinic visits every other Friday afternoon at Hilo Benioff Medical Center, and home IV antibiotic therapy across East Hawaiʻi.") + f"""
+                       "Infectious disease care on the Big Island: hospital consultation and clinic visits at Hilo Benioff Medical Center, and home IV antibiotic therapy across East Hawaiʻi.") + f"""
 <div class="wrap prose">
   <div class="grid-2" style="align-items:start">
     <div>
@@ -661,8 +662,10 @@ def hilo(ctx):
         <li><span>Phone</span><span><a href="tel:{tel}">{ph}</a></span></li>
         <li><span>Fax (referrals)</span><span>{s['fax']}</span></li>
       </ul>
-      <h2>Getting an appointment</h2>
-      <p>Ask your primary care physician or hospital team to fax a referral to {s['fax']} and write “Hilo clinic” on it. We call you to schedule. Patients who were seen by Dr. Thomas in the hospital are followed up in the Hilo clinic rather than having to fly to Honolulu.</p>
+      <h2>In the hospital</h2>
+      <p>Dr. Thomas also sees patients admitted to Hilo Benioff Medical Center. If you are in the hospital with a serious infection, your hospital team can ask for an infectious disease consultation; he will direct testing and antibiotics, plan any IV therapy you need at home, and see you in the Hilo clinic after you go home — no trip to Honolulu needed.</p>
+      <h2>Getting a clinic appointment</h2>
+      <p>Ask your primary care physician or hospital team to fax a referral to {s['fax']} and write “Hilo clinic” on it. We call you to schedule.</p>
       <p>If you need to be seen sooner than the next Hilo date, we can usually see you in Honolulu or arrange a telehealth visit; ask when you call.</p>
       <h2>Home IV antibiotics in East Hawaiʻi</h2>
       <p>Our home-infusion program covers Hilo and the surrounding districts. A nurse visits to teach you or a family member the infusion, checks the IV line and draws weekly labs, and the practice delivers your doses. A nurse is on call 24 hours a day.</p>
@@ -681,7 +684,7 @@ def hilo(ctx):
 </div>
 """
     return {"path": "/hilo/", "title": "Hilo clinic", "nav": "patients",
-            "description": "Oahu Medical Group infectious disease clinic in Hilo: every other Friday afternoon at Hilo Benioff Medical Center, plus home IV antibiotic therapy across East Hawaiʻi.", "body": body}
+            "description": "Oahu Medical Group in Hilo: infectious disease hospital consultation and an every-other-Friday clinic at Hilo Benioff Medical Center, plus home IV antibiotic therapy across East Hawaiʻi.", "body": body}
 
 
 def home_infusion(ctx):
