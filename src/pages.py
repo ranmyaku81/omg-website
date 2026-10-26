@@ -447,7 +447,9 @@ def faq(ctx):
     ]
     items = "".join(f'<details class="faq"><summary>{q}</summary><div class="answer">{a}</div></details>' for q, a in qa)
     body = title_block('<a href="/for-patients/">For patients</a>', "Common questions") + f'<div class="wrap">{items}</div>'
-    return {"path": "/frequently-asked-questions/", "title": "Common questions", "nav": "patients",
+    import re as _re
+    plain = [(q, _re.sub(r"<[^>]+>", "", a_).strip()) for q, a_ in qa]
+    return {"path": "/frequently-asked-questions/", "title": "Common questions", "nav": "patients", "faq": plain,
             "description": "Answers to common questions about referrals, scheduling, insurance, parking and billing at Oahu Medical Group.", "body": body}
 
 

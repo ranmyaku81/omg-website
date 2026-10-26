@@ -19,6 +19,8 @@ sys.path.insert(0, str(SRC))
 from providers import PROVIDERS, ORDER  # noqa: E402
 from conditions import CONDITIONS  # noqa: E402
 import pages  # noqa: E402
+import seo  # noqa: E402
+import datetime
 
 SITE = {
     "name": "Oahu Medical Group",
@@ -57,8 +59,11 @@ def e(s):
     return html.escape(s, quote=True)
 
 
-def head(title, description, path):
+def head(title, description, path, schema="", image=None):
     full = f"{title} | {SITE['name']}" if title != SITE["name"] else f"{SITE['name']} — {SITE['tagline']}, Honolulu"
+    image = image or "/assets/img/clinic-entrance.jpg"
+    # The GitHub preview must not compete with the real site in Google.
+    robots = '<meta name="robots" content="noindex, nofollow">' if os.environ.get("BASE_PATH") else '<meta name="robots" content="index, follow, max-image-preview:large">'
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -71,7 +76,14 @@ def head(title, description, path):
 <meta property="og:description" content="{e(description)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="{SITE['domain']}{path}">
-<meta property="og:image" content="{SITE['domain']}/assets/img/clinic-entrance.jpg">
+<meta property="og:image" content="{SITE['domain']}{image}">
+<meta property="og:site_name" content="{SITE['name']}">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+{robots}
+<meta name="geo.region" content="US-HI">
+<meta name="geo.placename" content="Honolulu">
+{schema}
 <link rel="icon" href="/assets/img/favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -176,9 +188,40 @@ def rebase(html_):
     return html_
 
 
+PROVIDERS_BY_SLUG = {p["slug"]: p for p in PROVIDERS}
+CONDITIONS_BY_SLUG = {c["slug"]: c for c in CONDITIONS}
+
+
+def schema_for(page):
+    path = page["path"]
+    ordered = [PROVIDERS_BY_SLUG[x] for x in ORDER]
+    nodes = []
+    if path in ("/", "/contact-us/", "/hilo/", "/about-us/"):
+        nodes += seo.organization(SITE, ordered)
+    if path.startswith("/our_teams/"):
+        p = PROVIDERS_BY_SLUG[path.strip("/").split("/")[-1]]
+        nodes.append(seo.physician(SITE, p))
+        nodes.append(seo.breadcrumbs(SITE, [("Home", "/"), ("Our doctors", "/our-providers/"), (p["name"], path)]))
+    if path.startswith("/conditions/") and path != "/conditions/":
+        c = CONDITIONS_BY_SLUG[path.strip("/").split("/")[-1]]
+        nodes.append(seo.condition_page(SITE, c))
+        nodes.append(seo.breadcrumbs(SITE, [("Home", "/"), ("Conditions", "/conditions/"), (c["name"], path)]))
+    if page.get("faq"):
+        nodes.append(seo.faq(page["faq"]))
+    return seo.script(nodes)
+
+
+def og_image(page):
+    if page["path"].startswith("/our_teams/"):
+        p = PROVIDERS_BY_SLUG[page["path"].strip("/").split("/")[-1]]
+        if p.get("photo"):
+            return f"/assets/img/{p['photo']}"
+    return None
+
+
 def render(page):
     body = header(page.get("nav")) + page["body"] + footer()
-    return head(page["title"], page["description"], page["path"]) + "\n<body>\n" + body
+    return head(page["title"], page["description"], page["path"], schema_for(page), og_image(page)) + "\n<body>\n" + body
 
 
 def write(path, content):
@@ -211,8 +254,12 @@ def main():
     # Housekeeping files
     (OUT / "CNAME").write_text("www.hawaiiinfectiousdisease.com\n")
     (OUT / ".nojekyll").write_text("")
-    (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE['domain']}/sitemap.xml\n")
-    urls = "".join(f"<url><loc>{SITE['domain']}{p['path']}</loc></url>" for p in pages.all_pages(ctx))
+    if os.environ.get("BASE_PATH"):
+        (OUT / "robots.txt").write_text("User-agent: *\nDisallow: /\n")
+    else:
+        (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE['domain']}/sitemap.xml\n")
+    today = datetime.date.today().isoformat()
+    urls = "".join(f"<url><loc>{SITE['domain']}{p['path']}</loc><lastmod>{today}</lastmod></url>" for p in pages.all_pages(ctx))
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
     (OUT / "404.html").write_text(rebase(render({
         "path": "/404.html", "title": "Page not found", "nav": None,
